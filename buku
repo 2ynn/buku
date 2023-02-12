@@ -1959,7 +1959,7 @@ class BukuDb:
 
         return parse_tags(tags)
 
-    def replace_tag(self, orig: str, new: List[str] = []) -> bool:
+    def replace_tag(self, orig: str, new: List[str] = [], chatty: bool = True) -> bool:
         """Replace original tag by new tags in all records.
 
         Remove original tag if new tag is empty.
@@ -1970,6 +1970,8 @@ class BukuDb:
             Original tag.
         new : list
             Replacement tags.
+        chatty: bool
+            Skip confirmation when set to False.
 
         Returns
         -------
@@ -1986,7 +1988,7 @@ class BukuDb:
 
         # Remove original tag from DB if new tagset reduces to delimiter
         if newtags == DELIM:
-            return self.delete_tag_at_index(0, orig)
+            return self.delete_tag_at_index(0, orig, chatty=chatty)
 
         # Update bookmarks with original tag
         query = 'SELECT id, tags FROM bookmarks WHERE tags LIKE ?'

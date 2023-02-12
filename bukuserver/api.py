@@ -103,14 +103,14 @@ class ApiTagView(MethodView):
     def put(self, tag: str):
         bukudb = get_bukudb()
         try:
-            new_tags = request.data.get('tags')  # type: ignore
-            if new_tags:
-                new_tags = new_tags.split(',')
-            else:
+            new_tags = request.data.get('tags')  # type: str
+            if not isinstance(new_tags, str):
                 return response_bad()
+            new_tags = [new_tags] if new_tags else []
         except AttributeError as e:
             raise exceptions.ParseError(detail=str(e))
-        return to_response(bukudb.replace_tag(tag, new_tags))
+
+        return to_response(bukudb.replace_tag(tag, new_tags, chatty=False))
 
 
 class ApiBookmarkView(MethodView):
